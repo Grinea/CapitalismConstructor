@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CapitalismIsland</string>
+    <string name="title">Capitalism Island</string>
+    <string name="author">Owen Frere</string>
+
+    <string name="nav_home_title">Home</string>
+    <string name="nav_play_title">Play</string>
+    <string name="nav_settings_title">Settings</string>
+</resources>
