@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class GameFragment extends Fragment
 {
@@ -15,6 +16,15 @@ public class GameFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_game, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_game, container, false);
+
+        FragmentManager fm = getFragmentManager();
+
+        fm.beginTransaction()
+                .add(R.id.map, new MapFragment())
+                .add(R.id.stats, new StatsFragment())
+                .add(R.id.selector, new SelectorFragment()).commit();
+        return view;
     }
 }

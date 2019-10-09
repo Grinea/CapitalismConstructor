@@ -4,14 +4,14 @@ public class GameData {
 
     private static GameData instance = null;
     private Settings settings;
-    private MapElement[][] map;
+    private GameMap map;
     private int money;
     private int gameTime;
 
     private GameData()
     {
         settings = new Settings();
-        map = new MapElement[30][10];
+        map = new GameMap(10,20);
         money = 0;
         gameTime = 0;
     }
@@ -26,4 +26,28 @@ public class GameData {
         return instance;
     }
 
+    public GameMap getMap()
+    {
+        return map;
+    }
+
+    public int getMoney()
+    {
+        return money;
+    }
+
+    public void setMoney(int money)
+    {
+        this.money = money;
+    }
+
+    public int getGameTime()
+    {
+        return gameTime;
+    }
+
+    public void setGameTime(int gameTime)
+    {
+        this.gameTime = gameTime;
+    }
 }

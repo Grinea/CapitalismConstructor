@@ -2,17 +2,17 @@ package com.github.grinea.capitalismisland.model;
 
 public class Settings
 {
-    private int mapWidth = 50;
-    private int mapHeight = 10;
-    private int initialMoney = 1000;
-    private int familySize = 4;
-    private int shopSize = 6;
-    private int salary = 10;
-    private double taxRate = 0.3;
-    private int serviceCost = 2;
-    private int houseCost = 100;
-    private int commCost = 500;
-    private int roadCost = 20;
+    private int mapWidth;
+    private int mapHeight;
+    private int initialMoney;
+    private int familySize;
+    private int shopSize;
+    private int salary;
+    private double taxRate;
+    private int serviceCost;
+    private int houseCost;
+    private int commCost;
+    private int roadCost;
 
     public Settings()
     {
