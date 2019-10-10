@@ -45,7 +45,14 @@ public class MapElement
 
     public int getStructureType()
     {
-        return structure.getType();
+        if (structure == null)
+        {
+            return -1;
+        }
+        else
+        {
+            return structure.getType();
+        }
     }
 
     public Bitmap getImage()

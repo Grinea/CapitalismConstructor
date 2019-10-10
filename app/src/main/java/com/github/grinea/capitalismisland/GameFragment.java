@@ -15,6 +15,9 @@ import com.github.grinea.capitalismisland.model.Structure;
 public class GameFragment extends Fragment
 {
     private Structure selStruct = null;
+    private MapFragment mapFrag;
+    private StatsFragment statsFrag;
+    private SelectorFragment selFrag;
 
     @Nullable
     @Override
@@ -25,10 +28,14 @@ public class GameFragment extends Fragment
 
         FragmentManager fm = getFragmentManager();
 
+        mapFrag = new MapFragment();
+        statsFrag = new StatsFragment();
+        selFrag = new SelectorFragment();
+
         fm.beginTransaction()
-                .add(R.id.map, new MapFragment())
-                .add(R.id.stats, new StatsFragment())
-                .add(R.id.selector, new SelectorFragment()).commit();
+                .add(R.id.map, mapFrag)
+                .add(R.id.stats, statsFrag)
+                .add(R.id.selector, selFrag).commit();
         return view;
     }
 
@@ -40,5 +47,17 @@ public class GameFragment extends Fragment
     public void setSelStruct(Structure selStruct)
     {
         this.selStruct = selStruct;
+    }
+
+    public MapFragment getMapFrag() {
+        return mapFrag;
+    }
+
+    public StatsFragment getStatsFrag() {
+        return statsFrag;
+    }
+
+    public SelectorFragment getSelFrag() {
+        return selFrag;
     }
 }

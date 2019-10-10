@@ -6,6 +6,7 @@ public class GameMap
 
     public GameMap(int rows, int cols)
     {
+
         this.map = new MapElement[rows][cols];
         for (int ii = 0; ii < map.length; ii++)
         {
@@ -25,7 +26,7 @@ public class GameMap
             throw new IllegalArgumentException("No such map element.");
         }
 
-        return map[position/map[0].length][position%map[0].length];
+        return map[position%map.length][position/map.length];
 
     }
 
@@ -47,12 +48,12 @@ public class GameMap
     public boolean isBuildable(int position) {
         boolean buildable = false;
 
-        int row = position / map[0].length;
-        int col = position % map[0].length;
+        int row = position / map.length;
+        int col = position % map.length;
 
         if (row > 0)
         {
-            if (map[row - 1][col].getStructureType() == 0)
+            if (map[col][row - 1].getStructureType() == 0)
             {
                 buildable = true;
             }
@@ -60,7 +61,7 @@ public class GameMap
 
         if (row < map.length - 1)
         {
-            if (map[row + 1][col].getStructureType() == 0)
+            if (map[col][row + 1].getStructureType() == 0)
             {
                 buildable = true;
             }
@@ -68,15 +69,15 @@ public class GameMap
 
         if (col > 0)
         {
-            if (map[row][col - 1].getStructureType() == 0)
+            if (map[col-1][row].getStructureType() == 0)
             {
                 buildable = true;
             }
         }
 
-        if (row < map[0].length - 1)
+        if (col < map[0].length - 1)
         {
-            if (map[row][col + 1].getStructureType() == 0)
+            if (map[col + 1][row].getStructureType() == 0)
             {
                 buildable = true;
             }

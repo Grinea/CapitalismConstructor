@@ -23,6 +23,7 @@ import com.github.grinea.capitalismisland.model.StructureData;
 public class SelectorFragment extends Fragment
 {
     private Structure selStruct = null;
+    private RecyclerView rv;
 
     public Structure getSelStruct() {
         return selStruct;
@@ -30,8 +31,7 @@ public class SelectorFragment extends Fragment
 
     public void clearSelStruct() {
         this.selStruct = null;
-        RecyclerView rv = getView().findViewById(R.id.selectorRecycler);
-        rv.getAdapter().notifyDataSetChanged();
+        deselectAll();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SelectorFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_selector, container,  false);
 
-        RecyclerView rv = view.findViewById(R.id.selectorRecycler);
+        rv = view.findViewById(R.id.selectorRecycler);
 
         rv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -148,29 +148,28 @@ public class SelectorFragment extends Fragment
             }
         }
 
-        private void select()
+        void select()
         {
             background.setAlpha((float) 0.8);
         }
 
-        private void deselect()
+        void deselect()
         {
             background.setAlpha((float) 0.0);
         }
+    }
 
-        private void deselectAll()
+    private void deselectAll()
+    {
+        SelectorViewHolder svh = null;
+
+        for (int ii = 0; ii < rv.getAdapter().getItemCount(); ii++)
         {
-            RecyclerView rv = getView().findViewById(R.id.selectorRecycler);
-
-            for (int ii = 0; ii < rv.getAdapter().getItemCount(); ii++) {
-
-                SelectorViewHolder svh = (SelectorViewHolder) rv.findViewHolderForAdapterPosition(ii);
-                if (svh != null) {
-                    svh.deselect();
-                }
+            svh = (SelectorViewHolder)rv.findViewHolderForAdapterPosition(ii);
+            if (svh != null)
+            {
+                svh.deselect();
             }
         }
     }
-
-
 }

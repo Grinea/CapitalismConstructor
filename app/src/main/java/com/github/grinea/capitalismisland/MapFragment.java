@@ -20,9 +20,12 @@ import com.github.grinea.capitalismisland.model.GameMap;
 import com.github.grinea.capitalismisland.model.MapElement;
 import com.github.grinea.capitalismisland.model.Structure;
 
+import java.util.Map;
+
 
 public class MapFragment extends Fragment
 {
+    RecyclerView rv;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -37,7 +40,7 @@ public class MapFragment extends Fragment
         GameMap map = GameData.getInstance().getMap();
         View view = inflater.inflate(R.layout.fragment_map, container,  false);
 
-        RecyclerView rv = view.findViewById(R.id.mapRecycler);
+        rv = view.findViewById(R.id.mapRecycler);
 
         rv.setLayoutManager(new GridLayoutManager(getActivity(), map.getRows(), GridLayoutManager.HORIZONTAL, false));
 
@@ -81,7 +84,7 @@ public class MapFragment extends Fragment
 
     private class MapViewHolder extends RecyclerView.ViewHolder
     {
-        private ImageView structure;
+        private ImageView structImg;
         private ImageView background;
 
         public MapViewHolder(LayoutInflater li, ViewGroup parent)
@@ -95,17 +98,13 @@ public class MapFragment extends Fragment
             lp.width = size;
             lp.height = size;
 
-            structure =  itemView.findViewById(R.id.structure);
+            structImg =  itemView.findViewById(R.id.structure);
             background = itemView.findViewById(R.id.background);
 
             itemView.setOnClickListener((v) -> {
 
-                Structure selStruct;
-
-                FragmentManager fm = getFragmentManager();
-
-                SelectorFragment sf = (SelectorFragment)fm.findFragmentById(R.id.selector);
-                selStruct = sf.getSelStruct();
+                SelectorFragment sf = (SelectorFragment)getFragmentManager().findFragmentById(R.id.selector);
+                Structure selStruct = sf.getSelStruct();
 
                 if (selStruct == null)
                 {
@@ -113,18 +112,23 @@ public class MapFragment extends Fragment
                 }
                 else
                 {
+                    GameMap src = GameData.getInstance().getMap();
+                    MapElement mapEl = src.getElement(getAdapterPosition());
                     if (selStruct.getType() > 0)
                     {
-                        //todo set the mapelement's structure and get recycler position
-                        if (GameData.getInstance().getMap().isBuildable(1))
+
+                        if (src.isBuildable(getAdapterPosition()))
                         {
-                            structure.setImageResource(selStruct.getImageID());
+                            mapEl.setStructure(selStruct);
+                            structImg.setImageResource(selStruct.getImageID());
                             sf.clearSelStruct();
                         }
                     }
                     else
                     {
-                        //todo just build it
+                        mapEl.setStructure(selStruct);
+                        structImg.setImageResource(selStruct.getImageID());
+                        sf.clearSelStruct();
                     }
                 }
             });
@@ -147,6 +151,17 @@ public class MapFragment extends Fragment
                     background.setImageResource(R.drawable.ic_grass4);
                     break;
             }
+
+            if (data.getStructure() == null)
+            {
+                structImg.setImageDrawable(null);
+            }
+            else
+            {
+                structImg.setImageResource(data.getStructure().getImageID());
+            }
         }
+
+
     }
 }
