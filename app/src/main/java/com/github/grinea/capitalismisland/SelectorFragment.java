@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,11 +15,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.grinea.capitalismisland.model.GameData;
+import com.github.grinea.capitalismisland.model.Structure;
 import com.github.grinea.capitalismisland.model.StructureData;
+
 
 
 public class SelectorFragment extends Fragment
 {
+    private Structure selStruct = null;
+
+    public Structure getSelStruct() {
+        return selStruct;
+    }
+
+    public void clearSelStruct() {
+        this.selStruct = null;
+        RecyclerView rv = getView().findViewById(R.id.selectorRecycler);
+        rv.getAdapter().notifyDataSetChanged();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
@@ -30,28 +44,27 @@ public class SelectorFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        StructureData data = StructureData.getInstance();
         View view = inflater.inflate(R.layout.fragment_selector, container,  false);
 
         RecyclerView rv = view.findViewById(R.id.selectorRecycler);
 
         rv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        SelectorAdapter adapter = new SelectorAdapter(getContext());
+        SelectorAdapter adapter = new SelectorAdapter(getContext(), StructureData.getInstance());
 
         rv.setAdapter(adapter);
 
         return view;
     }
 
-    private class SelectorAdapter extends RecyclerView.Adapter<MapViewHolder>
+    private class SelectorAdapter extends RecyclerView.Adapter<SelectorViewHolder>
     {
         private StructureData src;
         private LayoutInflater li;
 
-        public MapAdapter(Context context)
+        public SelectorAdapter(Context context, StructureData src)
         {
-            this.src = StructureData.getInstance();
+            this.src = src;
             this.li = LayoutInflater.from(context);
         }
 
@@ -77,40 +90,84 @@ public class SelectorFragment extends Fragment
 
     private class SelectorViewHolder extends RecyclerView.ViewHolder
     {
-        private ImageView structure;
-        private ImageView background;
+        private ImageView pic, background;
+        private TextView price;
+        private Structure structure = null;
 
         public SelectorViewHolder(LayoutInflater li, ViewGroup parent)
         {
-            super(li.inflate(R.layout.fragment_map_element, parent, false));
+            super(li.inflate(R.layout.fragment_selector_element, parent, false));
 
-            int size = parent.getMeasuredHeight() / GameData.getInstance().getMap().getRows() + 1;
-
-            ViewGroup.LayoutParams lp = itemView.getLayoutParams();
-
-            lp.width = size;
-            lp.height = size;
-
-            structure =  itemView.findViewById(R.id.structure);
+            pic =  itemView.findViewById(R.id.structure);
+            price = itemView.findViewById(R.id.price);
             background = itemView.findViewById(R.id.background);
+
+            itemView.setOnClickListener((v) -> {
+                if (selStruct == structure)
+                {
+                    selStruct = null;
+                    deselect();
+                }
+                else
+                {
+                    selStruct = structure;
+
+                    deselectAll();
+
+                    select();
+                }
+            });
+
         }
 
-        public void bind (MapElement data)
+        public void bind (Structure struct)
         {
-            switch (data.getGrassType())
+            pic.setImageResource(struct.getImageID());
+            structure = struct;
+
+            if (selStruct == structure)
             {
+                select();
+            }
+            else
+            {
+                deselect();
+            }
+
+            switch (struct.getType())
+            {
+                case 0:
+                    price.setText(String.valueOf(GameData.getInstance().getSettings().getRoadCost()));
+                    break;
                 case 1:
-                    background.setImageResource(R.drawable.ic_grass1);
+                    price.setText(String.valueOf(GameData.getInstance().getSettings().getHouseCost()));
                     break;
                 case 2:
-                    background.setImageResource(R.drawable.ic_grass2);
+                    price.setText(String.valueOf(GameData.getInstance().getSettings().getCommCost()));
                     break;
-                case 3:
-                    background.setImageResource(R.drawable.ic_grass3);
-                    break;
-                case 4:
-                    background.setImageResource(R.drawable.ic_grass4);
-                    break;
+            }
+        }
+
+        private void select()
+        {
+            background.setAlpha((float) 0.8);
+        }
+
+        private void deselect()
+        {
+            background.setAlpha((float) 0.0);
+        }
+
+        private void deselectAll()
+        {
+            RecyclerView rv = getView().findViewById(R.id.selectorRecycler);
+
+            for (int ii = 0; ii < rv.getAdapter().getItemCount(); ii++) {
+
+                SelectorViewHolder svh = (SelectorViewHolder) rv.findViewHolderForAdapterPosition(ii);
+                if (svh != null) {
+                    svh.deselect();
+                }
             }
         }
     }

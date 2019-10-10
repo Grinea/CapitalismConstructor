@@ -5,17 +5,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.grinea.capitalismisland.model.GameData;
 import com.github.grinea.capitalismisland.model.GameMap;
 import com.github.grinea.capitalismisland.model.MapElement;
+import com.github.grinea.capitalismisland.model.Structure;
 
 
 public class MapFragment extends Fragment
@@ -94,6 +97,37 @@ public class MapFragment extends Fragment
 
             structure =  itemView.findViewById(R.id.structure);
             background = itemView.findViewById(R.id.background);
+
+            itemView.setOnClickListener((v) -> {
+
+                Structure selStruct;
+
+                FragmentManager fm = getFragmentManager();
+
+                SelectorFragment sf = (SelectorFragment)fm.findFragmentById(R.id.selector);
+                selStruct = sf.getSelStruct();
+
+                if (selStruct == null)
+                {
+                    //todo go to inspect
+                }
+                else
+                {
+                    if (selStruct.getType() > 0)
+                    {
+                        //todo set the mapelement's structure and get recycler position
+                        if (GameData.getInstance().getMap().isBuildable(1))
+                        {
+                            structure.setImageResource(selStruct.getImageID());
+                            sf.clearSelStruct();
+                        }
+                    }
+                    else
+                    {
+                        //todo just build it
+                    }
+                }
+            });
         }
 
         public void bind (MapElement data)

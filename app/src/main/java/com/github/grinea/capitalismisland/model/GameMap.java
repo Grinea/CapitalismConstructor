@@ -43,4 +43,45 @@ public class GameMap
     {
         return map[0].length;
     }
+
+    public boolean isBuildable(int position) {
+        boolean buildable = false;
+
+        int row = position / map[0].length;
+        int col = position % map[0].length;
+
+        if (row > 0)
+        {
+            if (map[row - 1][col].getStructureType() == 0)
+            {
+                buildable = true;
+            }
+        }
+
+        if (row < map.length - 1)
+        {
+            if (map[row + 1][col].getStructureType() == 0)
+            {
+                buildable = true;
+            }
+        }
+
+        if (col > 0)
+        {
+            if (map[row][col - 1].getStructureType() == 0)
+            {
+                buildable = true;
+            }
+        }
+
+        if (row < map[0].length - 1)
+        {
+            if (map[row][col + 1].getStructureType() == 0)
+            {
+                buildable = true;
+            }
+        }
+
+        return buildable;
+    }
 }

@@ -43,6 +43,11 @@ public class MapElement
         this.structure = structure;
     }
 
+    public int getStructureType()
+    {
+        return structure.getType();
+    }
+
     public Bitmap getImage()
     {
         return image;

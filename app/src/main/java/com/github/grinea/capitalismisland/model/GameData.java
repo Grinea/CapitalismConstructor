@@ -50,4 +50,8 @@ public class GameData {
     {
         this.gameTime = gameTime;
     }
+
+    public Settings getSettings() {
+        return settings;
+    }
 }

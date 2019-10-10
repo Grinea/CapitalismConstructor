@@ -10,8 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.github.grinea.capitalismisland.model.Structure;
+
 public class GameFragment extends Fragment
 {
+    private Structure selStruct = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -26,5 +30,15 @@ public class GameFragment extends Fragment
                 .add(R.id.stats, new StatsFragment())
                 .add(R.id.selector, new SelectorFragment()).commit();
         return view;
+    }
+
+    public Structure getSelStruct()
+    {
+        return selStruct;
+    }
+
+    public void setSelStruct(Structure selStruct)
+    {
+        this.selStruct = selStruct;
     }
 }
