@@ -6,4 +6,13 @@
     <string name="nav_home_title">Home</string>
     <string name="nav_play_title">Play</string>
     <string name="nav_settings_title">Settings</string>
+
+    <string name="save_button">Save</string>
+    <string name="reset_button">Reset</string>
+
+    <string name="starting_cash">Starting cash</string>
+    <string name="map_width">Map width</string>
+    <string name="map_height">Map height</string>
+
+    <string name="save_warning">Saving will delete game state</string>
 </resources>

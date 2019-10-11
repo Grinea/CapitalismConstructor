@@ -18,7 +18,7 @@ public class GameData {
 
     private GameData() {
         settings = new Settings();
-        map = new GameMap(Math.max(settings.getMapHeight(), 3), Math.max(settings.getMapWidth(), 3));
+        map = new GameMap(Math.max(settings.getMapWidth(), 3), Math.max(settings.getMapHeight(), 3));
         money = settings.getInitialMoney();
         gameTime = 0;
         nRes = 0;
@@ -32,6 +32,22 @@ public class GameData {
         }
 
         return instance;
+    }
+
+    public void setSettings(Settings settings)
+    {
+        this.settings = settings;
+    }
+
+    public void resetData()
+    {
+        map = new GameMap(Math.max(settings.getMapWidth(),3), Math.max(settings.getMapHeight(),3));
+        money = settings.getInitialMoney();
+        gameTime = 0;
+        nRes = 0;
+        nCom = 0;
+
+        //todo dumpster everything
     }
 
     public void setObs(StatsObs observer) {

@@ -25,7 +25,7 @@ public class GameMap
             throw new IllegalArgumentException("No such map element.");
         }
 
-        return map[position%map.length][position/map.length];
+        return map[position/map[0].length][position%map[0].length];
 
     }
 
@@ -36,7 +36,7 @@ public class GameMap
 
     public int getRows()
     {
-        return map.length;
+        return map[0].length;
     }
 
     public int getCols()
@@ -48,8 +48,8 @@ public class GameMap
     {
         boolean buildable = false;
 
-        int row = position % map.length;
-        int col = position / map.length;
+        int row = position / map[0].length;
+        int col = position % map[0].length;
 
         System.out.println("Column check:\n" + (col + 1) + "/" + (map[0].length));
         System.out.println("Row check:\n" + (row + 1) + "/" + (map.length));
