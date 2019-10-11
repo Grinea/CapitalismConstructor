@@ -12,4 +12,11 @@ public class Residential extends Structure
     {
         return 1;
     }
+
+    @Override
+    public int getCost()
+    {
+        return GameData.getInstance().getSettings().getHouseCost();
+    }
+
 }

@@ -12,4 +12,10 @@ public class Road extends Structure
     {
         return 0;
     }
+
+    @Override
+    public int getCost()
+    {
+        return GameData.getInstance().getSettings().getRoadCost();
+    }
 }

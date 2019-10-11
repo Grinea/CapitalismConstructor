@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.grinea.capitalismisland.model.GameData;
 import com.github.grinea.capitalismisland.model.GameMap;
 import com.github.grinea.capitalismisland.model.MapElement;
+import com.github.grinea.capitalismisland.model.Settings;
 import com.github.grinea.capitalismisland.model.Structure;
 
 import java.util.Map;
@@ -103,7 +104,9 @@ public class MapFragment extends Fragment
 
             itemView.setOnClickListener((v) -> {
 
-                SelectorFragment sf = (SelectorFragment)getFragmentManager().findFragmentById(R.id.selector);
+                FragmentManager fm = getFragmentManager();
+
+                SelectorFragment sf = (SelectorFragment)fm.findFragmentById(R.id.selector);
                 Structure selStruct = sf.getSelStruct();
 
                 if (selStruct == null)
@@ -112,23 +115,11 @@ public class MapFragment extends Fragment
                 }
                 else
                 {
-                    GameMap src = GameData.getInstance().getMap();
-                    MapElement mapEl = src.getElement(getAdapterPosition());
-                    if (selStruct.getType() > 0)
+                    if (((GameFragment)fm.findFragmentById(R.id.fragment_holder))
+                            .build(selStruct,getAdapterPosition()))
                     {
-
-                        if (src.isBuildable(getAdapterPosition()))
-                        {
-                            mapEl.setStructure(selStruct);
-                            structImg.setImageResource(selStruct.getImageID());
-                            sf.clearSelStruct();
-                        }
-                    }
-                    else
-                    {
-                        mapEl.setStructure(selStruct);
-                        structImg.setImageResource(selStruct.getImageID());
                         sf.clearSelStruct();
+                        structImg.setImageResource(selStruct.getImageID());
                     }
                 }
             });

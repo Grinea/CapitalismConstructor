@@ -13,5 +13,7 @@ public abstract class Structure
         return imageID;
     }
 
+    public abstract int getCost();
+
     public abstract int getType();
 }

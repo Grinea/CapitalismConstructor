@@ -12,4 +12,9 @@ public class Commercial extends Structure
     {
         return 2;
     }
+
+    @Override
+    public int getCost() {
+        return GameData.getInstance().getSettings().getCommCost();
+    }
 }
