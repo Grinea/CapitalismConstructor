@@ -1,12 +1,20 @@
-package com.github.grinea.capitalismisland;
+package com.github.grinea.capitalismisland.view;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,17 +23,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.grinea.capitalismisland.R;
 import com.github.grinea.capitalismisland.model.GameData;
 import com.github.grinea.capitalismisland.model.GameMap;
 import com.github.grinea.capitalismisland.model.MapElement;
-import com.github.grinea.capitalismisland.model.Settings;
 import com.github.grinea.capitalismisland.model.Structure;
-
-import java.util.Map;
 
 
 public class MapFragment extends Fragment
 {
+    private static final int PHOTO_REQUEST_CODE = 1;
+    private MapElement selElem;
+
     RecyclerView rv;
 
     @Override
@@ -87,6 +96,8 @@ public class MapFragment extends Fragment
     {
         private ImageView structImg;
         private ImageView background;
+        private MapElement data;
+
 
         public MapViewHolder(LayoutInflater li, ViewGroup parent)
         {
@@ -104,14 +115,19 @@ public class MapFragment extends Fragment
 
             itemView.setOnClickListener((v) -> {
 
+                selElem = GameData.getInstance().getMap().getElement(getAdapterPosition());
                 FragmentManager fm = getFragmentManager();
 
                 SelectorFragment sf = (SelectorFragment)fm.findFragmentById(R.id.selector);
                 Structure selStruct = sf.getSelStruct();
 
+
                 if (selStruct == null)
                 {
-                    //todo go to inspect
+                    if (data.getStructure() != null)
+                    {
+                        inspectPopUp(getAdapterPosition());
+                    }
                 }
                 else
                 {
@@ -127,6 +143,7 @@ public class MapFragment extends Fragment
 
         public void bind (MapElement data)
         {
+            this.data = data;
             switch (data.getGrassType())
             {
                 case 1:
@@ -147,12 +164,78 @@ public class MapFragment extends Fragment
             {
                 structImg.setImageDrawable(null);
             }
+            else if (data.getImage() != null)
+            {
+                structImg.setImageBitmap(data.getImage());
+            }
             else
             {
                 structImg.setImageResource(data.getStructure().getImageID());
             }
         }
 
-
     }
+
+    public void inspectPopUp(int mapPos)
+    {
+        MapElement dataElem = GameData.getInstance().getMap().getElement(mapPos);
+        Structure structure = dataElem.getStructure();
+        View window = getLayoutInflater().inflate(R.layout.popup_inspect, null);
+
+        ImageView picture = window.findViewById(R.id.picture);
+        EditText ownerName = window.findViewById(R.id.owner_name);
+        TextView position = window.findViewById(R.id.position);
+        TextView type = window.findViewById(R.id.structure_type);
+
+        Button demolish = window.findViewById(R.id.demolish);
+        Button addPhoto = window.findViewById(R.id.add_photo);
+
+        picture.setImageResource(structure.getImageID());
+        ownerName.setText(dataElem.getOwnerName());
+
+        int cols = GameData.getInstance().getMap().getCols();
+        String pos = "X: " + (mapPos / cols) + " Y: " + (mapPos % cols);
+        position.setText(pos);
+        switch (structure.getType())
+        {
+            case 0:
+                type.setText("Road");
+                break;
+            case 1:
+                type.setText("Residential");
+                break;
+            case 2:
+                type.setText("Commercial");
+                break;
+        }
+
+        PopupWindow puw = new PopupWindow(window, -2, -2);
+        puw.setFocusable(true);
+        puw.showAtLocation(rv, Gravity.TOP, 0, 128);
+
+        demolish.setOnClickListener((z) ->
+        {
+            dataElem.setStructure(null);
+            rv.getAdapter().notifyItemChanged(mapPos);
+            puw.dismiss();
+        });
+
+        addPhoto.setOnClickListener((z) ->
+        {
+            puw.dismiss();
+            Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(photoIntent, PHOTO_REQUEST_CODE);
+        });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultIntent)
+    {
+        if (resultCode == Activity.RESULT_OK && requestCode == PHOTO_REQUEST_CODE)
+        {
+            selElem.setImage((Bitmap)resultIntent.getExtras().get("data"));
+        }
+    }
+
 }

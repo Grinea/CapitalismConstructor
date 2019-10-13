@@ -1,6 +1,6 @@
 package com.github.grinea.capitalismisland.model;
 
-import com.github.grinea.capitalismisland.StatsObs;
+import com.github.grinea.capitalismisland.view.StatsObs;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +14,7 @@ public class GameData {
     private int gameTime;
     private int nRes;
     private int nCom;
+    privaye int income;
     private List<StatsObs> obs;
 
     private GameData() {
@@ -39,6 +40,16 @@ public class GameData {
         this.settings = settings;
     }
 
+    public int getIncome()
+    {
+        return income;
+    }
+
+    public void setIncome(int income)
+    {
+        this.income = income;
+    }
+
     public void resetData()
     {
         map = new GameMap(Math.max(settings.getMapWidth(),3), Math.max(settings.getMapHeight(),3));
@@ -46,6 +57,7 @@ public class GameData {
         gameTime = 0;
         nRes = 0;
         nCom = 0;
+        income = 0;
 
         //todo dumpster everything
     }

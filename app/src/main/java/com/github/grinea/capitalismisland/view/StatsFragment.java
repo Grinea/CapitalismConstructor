@@ -1,4 +1,4 @@
-package com.github.grinea.capitalismisland;
+package com.github.grinea.capitalismisland.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.github.grinea.capitalismisland.R;
 import com.github.grinea.capitalismisland.model.GameData;
-import com.github.grinea.capitalismisland.model.Structure;
-import com.github.grinea.capitalismisland.model.StructureData;
 
 
 public class StatsFragment extends Fragment implements StatsObs

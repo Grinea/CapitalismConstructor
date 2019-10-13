@@ -2,9 +2,9 @@ package com.github.grinea.capitalismisland.model;
 
 public class Road extends Structure
 {
-    public Road(int imageID)
+    public Road(int imageID, int ID)
     {
-        super(imageID);
+        super(imageID, ID);
     }
 
     @Override

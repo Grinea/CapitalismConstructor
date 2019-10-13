@@ -51,12 +51,8 @@ public class GameMap
         int row = position / map[0].length;
         int col = position % map[0].length;
 
-        System.out.println("Column check:\n" + (col + 1) + "/" + (map[0].length));
-        System.out.println("Row check:\n" + (row + 1) + "/" + (map.length));
-
         if (map[row][col].getStructure() != null)
         {
-            System.out.println("Not empty");
             return false;
         }
 
@@ -64,12 +60,7 @@ public class GameMap
         {
             if (map[row - 1][col].getStructureType() == 0)
             {
-                System.out.println("N:T");
                 buildable = true;
-            }
-            else
-            {
-                System.out.println("N:F");
             }
         }
 
@@ -77,12 +68,7 @@ public class GameMap
         {
             if (map[row + 1][col].getStructureType() == 0)
             {
-                System.out.println("S:T");
                 buildable = true;
-            }
-            else
-            {
-                System.out.println("S:F");
             }
         }
 
@@ -90,12 +76,7 @@ public class GameMap
         {
             if (map[row][col - 1].getStructureType() == 0)
             {
-                System.out.println("W:T");
                 buildable = true;
-            }
-            else
-            {
-                System.out.println("W:F");
             }
         }
 
@@ -103,12 +84,7 @@ public class GameMap
         {
             if (map[row][col + 1].getStructureType() == 0)
             {
-                System.out.println("E:T");
                 buildable = true;
-            }
-            else
-            {
-                System.out.println("E:F");
             }
         }
 

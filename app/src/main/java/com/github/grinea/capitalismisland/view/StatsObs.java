@@ -1,4 +1,4 @@
-package com.github.grinea.capitalismisland;
+package com.github.grinea.capitalismisland.view;
 
 public interface StatsObs
 {

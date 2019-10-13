@@ -2,9 +2,9 @@ package com.github.grinea.capitalismisland.model;
 
 public class Residential extends Structure
 {
-    public Residential(int imageID)
+    public Residential(int imageID, int ID)
     {
-        super(imageID);
+        super(imageID, ID);
     }
 
     @Override

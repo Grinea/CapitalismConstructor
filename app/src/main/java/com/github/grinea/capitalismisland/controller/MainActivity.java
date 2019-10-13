@@ -1,4 +1,4 @@
-package com.github.grinea.capitalismisland;
+package com.github.grinea.capitalismisland.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -6,6 +6,10 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
+import com.github.grinea.capitalismisland.view.GameFragment;
+import com.github.grinea.capitalismisland.view.HomeFragment;
+import com.github.grinea.capitalismisland.R;
+import com.github.grinea.capitalismisland.view.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

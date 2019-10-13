@@ -15,4 +15,7 @@
     <string name="map_height">Map height</string>
 
     <string name="save_warning">Saving will delete game state</string>
+
+    <string name="demolish">Demolish</string>
+    <string name="add_photo">Add Photo</string>
 </resources>

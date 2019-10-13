@@ -1,4 +1,4 @@
-package com.github.grinea.capitalismisland;
+package com.github.grinea.capitalismisland.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.grinea.capitalismisland.R;
 import com.github.grinea.capitalismisland.model.GameData;
 import com.github.grinea.capitalismisland.model.Structure;
 import com.github.grinea.capitalismisland.model.StructureData;

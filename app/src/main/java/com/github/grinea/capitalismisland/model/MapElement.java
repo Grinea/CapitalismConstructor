@@ -10,22 +10,24 @@ public class MapElement
     private Bitmap image;
     private String ownerName;
     private int grassType;
+    private int position;
 
-    public MapElement(Structure structure, Bitmap image, String ownerName, int grassType)
+    public MapElement(int position, Structure structure, String ownerName, int grassType)
     {
         this.structure = structure;
-        this.image = image;
         this.ownerName = ownerName;
         this.grassType = grassType;
+        this.position = position;
     }
 
-    public MapElement()
+    public MapElement(int position)
     {
         Random r = new Random();
         this.structure = null;
         this.image = null;
         this.ownerName = "Dave";
         this.grassType = r.nextInt((4-1)+1)+1;
+        this.position = position;
     }
 
     public int getGrassType()
@@ -36,6 +38,11 @@ public class MapElement
     public Structure getStructure()
     {
         return structure;
+    }
+
+    public int getPos()
+    {
+        return position;
     }
 
     public void setStructure(Structure structure)

@@ -64,78 +64,46 @@ public class Settings
         return familySize;
     }
 
-    public void setFamilySize(int familySize)
-    {
-        this.familySize = familySize;
-    }
 
     public int getShopSize()
     {
         return shopSize;
     }
 
-    public void setShopSize(int shopSize)
-    {
-        this.shopSize = shopSize;
-    }
 
     public int getSalary()
     {
         return salary;
     }
 
-    public void setSalary(int salary)
-    {
-        this.salary = salary;
-    }
 
     public double getTaxRate()
     {
         return taxRate;
     }
 
-    public void setTaxRate(double taxRate)
-    {
-        this.taxRate = taxRate;
-    }
 
     public int getServiceCost()
     {
         return serviceCost;
     }
 
-    public void setServiceCost(int serviceCost)
-    {
-        this.serviceCost = serviceCost;
-    }
 
     public int getHouseCost()
     {
         return houseCost;
     }
 
-    public void setHouseCost(int houseCost)
-    {
-        this.houseCost = houseCost;
-    }
 
     public int getCommCost()
     {
         return commCost;
     }
 
-    public void setCommCost(int commCost)
-    {
-        this.commCost = commCost;
-    }
 
     public int getRoadCost()
     {
         return roadCost;
     }
 
-    public void setRoadCost(int roadCost)
-    {
-        this.roadCost = roadCost;
-    }
 }
