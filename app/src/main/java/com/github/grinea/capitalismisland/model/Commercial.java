@@ -2,7 +2,7 @@ package com.github.grinea.capitalismisland.model;
 
 public class Commercial extends Structure
 {
-    public Commercial(int imageID, int ID)
+    Commercial(int imageID, int ID)
     {
         super(imageID, ID);
     }
@@ -14,7 +14,8 @@ public class Commercial extends Structure
     }
 
     @Override
-    public int getCost() {
+    public int getCost()
+    {
         return GameData.getInstance().getSettings().getCommCost();
     }
 }

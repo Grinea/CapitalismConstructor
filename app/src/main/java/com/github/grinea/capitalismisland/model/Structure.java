@@ -24,4 +24,23 @@ public abstract class Structure
     public abstract int getCost();
 
     public abstract int getType();
+
+    public String getDefaultName()
+    {
+        String name = "Default";
+        switch (getType())
+        {
+
+            case 0:
+                name = "Road";
+            break;
+            case 1:
+                name = "Residential";
+            break;
+            case 2:
+                name = "Commercial";
+            break;
+        }
+        return name;
+    }
 }

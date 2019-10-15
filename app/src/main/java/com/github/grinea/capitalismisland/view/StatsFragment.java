@@ -1,11 +1,13 @@
 package com.github.grinea.capitalismisland.view;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +37,7 @@ public class StatsFragment extends Fragment implements StatsObs
     {
         GameData data = GameData.getInstance();
 
-        View view = inflater.inflate(R.layout.fragment_game_stats, container,  false);
+        View view = inflater.inflate(R.layout.fragment_game_stats, container, false);
 
         ImageView iTime = view.findViewById(R.id.ic_time);
 
@@ -47,16 +49,36 @@ public class StatsFragment extends Fragment implements StatsObs
 
         tTime.setText(String.valueOf(data.getGameTime()));
         tMoney.setText(String.valueOf(data.getMoney()));
-        tIncome.setText("-");
-        tPop.setText("-");
-        tEmploy.setText("-");
+        if (data.getGameTime() == 0)
+        {
+            tIncome.setText("-");
+        } else
+        {
+            tIncome.setText(String.valueOf(data.getIncome()));
+        }
+        tPop.setText(String.valueOf(data.getPop()));
 
+        if (data.getPop() == 0)
+        {
+            tEmploy.setText("-");
+        } else
+        {
+            tEmploy.setText(String.valueOf((int) (data.getEmploy() * 100)));
+        }
         iTime.setOnClickListener((v) -> {
             data.timeStep();
+            if (data.getMoney() < 0)
+            {
+                gameOver();
+            }
         });
 
         tTime.setOnClickListener((v) -> {
             data.timeStep();
+            if (data.getMoney() < 0)
+            {
+                gameOver();
+            }
         });
 
         return view;
@@ -92,11 +114,18 @@ public class StatsFragment extends Fragment implements StatsObs
         if (pop == 0)
         {
             tEmploy.setText("--%");
-        }
-        else
+        } else
         {
-            double empRate = Math.min((double)jobs / (double)pop,1);
-            tEmploy.setText((int)(empRate * 100) + " %");
+            double empRate = Math.min((double) jobs / (double) pop, 1);
+            tEmploy.setText((int) (empRate * 100) + " %");
         }
+    }
+
+    public void gameOver()
+    {
+        Toast gameOver = Toast.makeText(getActivity().getApplicationContext(), "GAME OVER", Toast.LENGTH_LONG);
+        gameOver.setGravity(Gravity.CENTER, 0, 0);
+        gameOver.show();
+
     }
 }

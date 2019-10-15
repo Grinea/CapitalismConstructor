@@ -2,8 +2,8 @@ package com.github.grinea.capitalismisland.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.github.grinea.capitalismisland.model.DatabaseSchema.SettingsTable;
@@ -13,8 +13,10 @@ import com.github.grinea.capitalismisland.model.DatabaseSchema.MapTable;
 
 public class GameDatabase extends SQLiteOpenHelper
 {
-    private static final int VERSION = 1;
-    private static final String DATABASE_NAME = "capitalism.db";
+    public static final int VERSION = 1;
+    public static final String DATABASE_NAME = "capitalism.db";
+    private SQLiteDatabase db;
+
 
     public GameDatabase(Context context)
     {
@@ -25,9 +27,9 @@ public class GameDatabase extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         db.execSQL("CREATE TABLE " + SettingsTable.NAME + "(" +
-                SettingsTable.Cols.HEIGHT + " INTEGER, " +
-                SettingsTable.Cols.WIDTH + " INTEGER, " +
-                SettingsTable.Cols.INIT_CASH + " INTEGER)");
+                SettingsTable.Cols.HEIGHT + " INTEGER DEFAULT 10, " +
+                SettingsTable.Cols.WIDTH + " INTEGER DEFAULT 50, " +
+                SettingsTable.Cols.INIT_CASH + " INTEGER DEFAULT 1000)");
 
         db.execSQL("CREATE TABLE " + StateTable.NAME + "(" +
                 StateTable.Cols.TIME + " INTEGER, " +
@@ -39,38 +41,23 @@ public class GameDatabase extends SQLiteOpenHelper
         db.execSQL("CREATE TABLE " + MapTable.NAME + "(" +
                 MapTable.Cols.POS + " INTEGER, " +
                 MapTable.Cols.STRUCTURE + " INTEGER, " +
-                MapTable.Cols.OWNED + " INTEGER)");
+                MapTable.Cols.OWNED + " INTEGER, " +
+                MapTable.Cols.GRASS + " INTEGER)");
 
-        ContentValues cv = new ContentValues();
-        cv.put(SettingsTable.Cols.HEIGHT, 10);
-        cv.put(SettingsTable.Cols.WIDTH, 50);
-        cv.put(SettingsTable.Cols.INIT_CASH, 1000);
-        db.insert(SettingsTable.NAME, null, cv);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    public void onUpgrade(SQLiteDatabase newDb, int oldVersion, int newVersion)
     {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public void insertMap(MapElement[][] elems, SQLiteDatabase db)
+    public void setDB(SQLiteDatabase db)
     {
-        for(int ii = 0; ii < elems.length; ii++)
-        {
-            for (int jj = 0; jj < elems[0].length; jj++)
-            {
-                ContentValues cv = new ContentValues();
-                cv.put(MapTable.Cols.POS, elems[ii][jj].getPos());
-                cv.put(MapTable.Cols.STRUCTURE, elems[ii][jj].getStructure().getID());
-                cv.put(MapTable.Cols.OWNED, elems[ii][jj].getOwnerName());
-                cv.put(MapTable.Cols.GRASS, elems[ii][jj].getGrassType());
-                db.insert(MapTable.NAME, null, cv);
-            }
-        }
+        this.db = db;
     }
 
-    public void updateMapElement(MapElement mapEl, SQLiteDatabase db)
+    public void updateMapElement(MapElement mapEl)
     {
         ContentValues cv = new ContentValues();
         cv.put(MapTable.Cols.STRUCTURE, mapEl.getStructure().getID());
@@ -79,7 +66,24 @@ public class GameDatabase extends SQLiteOpenHelper
         db.update(MapTable.NAME, cv, "position = ?", pos);
     }
 
-    public void setSettings(int height, int width, int cash, SQLiteDatabase db)
+    public void insertMapElement(MapElement mapEl)
+    {
+        ContentValues cv = new ContentValues();
+        if (mapEl.getStructure() != null)
+        {
+            cv.put(MapTable.Cols.STRUCTURE, mapEl.getStructure().getID());
+        }
+        else
+        {
+            cv.put(MapTable.Cols.STRUCTURE, -1);
+        }
+        cv.put(MapTable.Cols.OWNED, mapEl.getOwnerName());
+        cv.put(MapTable.Cols.POS, mapEl.getPos());
+        cv.put(MapTable.Cols.GRASS, mapEl.getGrassType());
+        db.insert(MapTable.NAME, null, cv);
+    }
+
+    public void setSettings(int height, int width, int cash)
     {
         db.delete(SettingsTable.NAME, null, null);
         ContentValues cv = new ContentValues();
@@ -89,7 +93,7 @@ public class GameDatabase extends SQLiteOpenHelper
         db.insert(SettingsTable.NAME, null, cv);
     }
 
-    public void setState(int gameTime, int money, int nRes, int nCom, int income, SQLiteDatabase db)
+    public void setState(int gameTime, int money, int nRes, int nCom, int income)
     {
         db.delete(StateTable.NAME, null, null);
         ContentValues cv = new ContentValues();
@@ -101,28 +105,13 @@ public class GameDatabase extends SQLiteOpenHelper
         db.insert(StateTable.NAME, null, cv);
     }
 
-    public void reset(SQLiteDatabase db)
+    public void reset()
     {
         db.delete(StateTable.NAME, null, null);
         db.delete(MapTable.NAME, null, null);
     }
 
-    public class MapCursor extends CursorWrapper
-    {
-        public MapCursor(Cursor cursor) { super(cursor);}
-
-        public MapElement getElem(int pos)
-        {
-            return new MapElement(
-                    getInt(getColumnIndex("position")),
-
-            )
-
-
-        }
-    }
-
-    public void updateSettings(SQLiteDatabase db, Settings sts)
+    public void updateSettings(Settings sts)
     {
         Cursor cur = db.query(SettingsTable.NAME,null,null,null,null,null,null);
         sts.setMapWidth(cur.getInt(cur.getColumnIndex(SettingsTable.Cols.WIDTH)));
@@ -131,10 +120,19 @@ public class GameDatabase extends SQLiteOpenHelper
         cur.close();
     }
 
-    public void loadGameState(SQLiteDatabase db, GameData gd)
+    public SettingsCursor settingsQuery()
     {
-        updateSettings(db, gd.getSettings());
+        return new SettingsCursor(db.query(SettingsTable.NAME, null, null, null, null, null, null));
     }
 
-    public void
+    public MapCursor mapQuery()
+    {
+        return new MapCursor(db.query(MapTable.NAME,null,null,null,null,null,null));
+    }
+
+    public StateCursor stateQuery()
+    {
+        return new StateCursor(db.query(StateTable.NAME, null, null, null, null, null, null));
+    }
+
 }

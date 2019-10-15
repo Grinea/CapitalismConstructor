@@ -6,18 +6,28 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
+import com.github.grinea.capitalismisland.model.GameData;
+import com.github.grinea.capitalismisland.model.GameDatabase;
 import com.github.grinea.capitalismisland.view.GameFragment;
 import com.github.grinea.capitalismisland.view.HomeFragment;
 import com.github.grinea.capitalismisland.R;
 import com.github.grinea.capitalismisland.view.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        GameDatabase db = new GameDatabase(MainActivity.this);
+        db.setDB(db.getWritableDatabase());
+
+        GameData.getInstance().loadDB(db);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -29,23 +39,23 @@ public class MainActivity extends AppCompatActivity {
 
             Fragment selFrag = null;
 
-                switch (v.getItemId())
-                {
-                    case R.id.nav_home:
-                        selFrag = new HomeFragment();
-                        break;
-                    case R.id.nav_settings:
-                        selFrag = new SettingsFragment();
-                        break;
-                    case R.id.nav_play:
-                        selFrag = new GameFragment();
-                        break;
-                }
+            switch (v.getItemId())
+            {
+                case R.id.nav_home:
+                    selFrag = new HomeFragment();
+                    break;
+                case R.id.nav_settings:
+                    selFrag = new SettingsFragment();
+                    break;
+                case R.id.nav_play:
+                    selFrag = new GameFragment();
+                    break;
+            }
 
-                fm.beginTransaction().replace(R.id.fragment_holder, selFrag).commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, selFrag).commit();
 
-                return true;
-            });
+            return true;
+        });
     }
 
 

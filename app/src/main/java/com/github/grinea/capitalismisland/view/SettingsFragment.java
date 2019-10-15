@@ -141,7 +141,9 @@ public class SettingsFragment extends Fragment
             }
             sts.setMapHeight(Math.max(3,newHeight));
 
-            GameData.getInstance().resetData();
+            GameData gd = GameData.getInstance();
+            gd.setSettings(sts);
+            gd.resetData();
         });
 
         return view;

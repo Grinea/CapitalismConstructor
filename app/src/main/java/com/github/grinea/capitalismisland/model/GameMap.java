@@ -1,5 +1,7 @@
 package com.github.grinea.capitalismisland.model;
 
+import android.widget.Toast;
+
 public class GameMap
 {
     MapElement[][] map;
@@ -12,7 +14,7 @@ public class GameMap
         {
             for (int jj = 0; jj < map[0].length; jj++)
             {
-                map[ii][jj]  = new MapElement();
+                map[ii][jj]  = new MapElement(ii*map[0].length + jj);
             }
         }
     }
@@ -89,5 +91,10 @@ public class GameMap
         }
 
         return buildable;
+    }
+
+    public void setElement(MapElement elem)
+    {
+        map[elem.getPos() / map[0].length][elem.getPos() % map[0].length] = elem;
     }
 }

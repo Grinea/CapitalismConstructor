@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +50,7 @@ public class MapFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         GameMap map = GameData.getInstance().getMap();
-        View view = inflater.inflate(R.layout.fragment_map, container,  false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         rv = view.findViewById(R.id.mapRecycler);
 
@@ -110,7 +112,7 @@ public class MapFragment extends Fragment
             lp.width = size;
             lp.height = size;
 
-            structImg =  itemView.findViewById(R.id.structure);
+            structImg = itemView.findViewById(R.id.structure);
             background = itemView.findViewById(R.id.background);
 
             itemView.setOnClickListener((v) -> {
@@ -118,7 +120,7 @@ public class MapFragment extends Fragment
                 selElem = GameData.getInstance().getMap().getElement(getAdapterPosition());
                 FragmentManager fm = getFragmentManager();
 
-                SelectorFragment sf = (SelectorFragment)fm.findFragmentById(R.id.selector);
+                SelectorFragment sf = (SelectorFragment) fm.findFragmentById(R.id.selector);
                 Structure selStruct = sf.getSelStruct();
 
 
@@ -128,20 +130,20 @@ public class MapFragment extends Fragment
                     {
                         inspectPopUp(getAdapterPosition());
                     }
-                }
-                else
+                } else
                 {
-                    if (((GameFragment)fm.findFragmentById(R.id.fragment_holder))
-                            .build(selStruct,getAdapterPosition()))
+                    if (((GameFragment) fm.findFragmentById(R.id.fragment_holder)).build(selStruct, getAdapterPosition()))
                     {
                         sf.clearSelStruct();
+                        selElem.setOwnerName(selStruct.getDefaultName());
                         structImg.setImageResource(selStruct.getImageID());
+                        GameData.getInstance().updateMapElement(selElem);
                     }
                 }
             });
         }
 
-        public void bind (MapElement data)
+        public void bind(MapElement data)
         {
             this.data = data;
             switch (data.getGrassType())
@@ -163,12 +165,10 @@ public class MapFragment extends Fragment
             if (data.getStructure() == null)
             {
                 structImg.setImageDrawable(null);
-            }
-            else if (data.getImage() != null)
+            } else if (data.getImage() != null)
             {
                 structImg.setImageBitmap(data.getImage());
-            }
-            else
+            } else
             {
                 structImg.setImageResource(data.getStructure().getImageID());
             }
@@ -213,15 +213,36 @@ public class MapFragment extends Fragment
         puw.setFocusable(true);
         puw.showAtLocation(rv, Gravity.TOP, 0, 128);
 
-        demolish.setOnClickListener((z) ->
+        ownerName.addTextChangedListener(new TextWatcher()
         {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+                //this page has been left intentionally blank
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                //this page was left blank accidentally
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                dataElem.setOwnerName(s.toString());
+                GameData.getInstance().updateMapElement(dataElem);
+            }
+        });
+
+        demolish.setOnClickListener((z) -> {
+            GameData.getInstance().demolish(dataElem.getStructure());
             dataElem.setStructure(null);
             rv.getAdapter().notifyItemChanged(mapPos);
             puw.dismiss();
         });
 
-        addPhoto.setOnClickListener((z) ->
-        {
+        addPhoto.setOnClickListener((z) -> {
             puw.dismiss();
             Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(photoIntent, PHOTO_REQUEST_CODE);
@@ -234,7 +255,7 @@ public class MapFragment extends Fragment
     {
         if (resultCode == Activity.RESULT_OK && requestCode == PHOTO_REQUEST_CODE)
         {
-            selElem.setImage((Bitmap)resultIntent.getExtras().get("data"));
+            selElem.setImage((Bitmap) resultIntent.getExtras().get("data"));
         }
     }
 

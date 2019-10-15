@@ -2,6 +2,8 @@ package com.github.grinea.capitalismisland.model;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+
 import java.util.Random;
 
 public class MapElement
@@ -12,9 +14,16 @@ public class MapElement
     private int grassType;
     private int position;
 
-    public MapElement(int position, Structure structure, String ownerName, int grassType)
+    public MapElement(int position, int structure, String ownerName, int grassType)
     {
-        this.structure = structure;
+        if (structure != -1)
+        {
+            this.structure = StructureData.getInstance().getElement(structure);
+        }
+        else
+        {
+            this.structure = null;
+        }
         this.ownerName = ownerName;
         this.grassType = grassType;
         this.position = position;
@@ -25,7 +34,6 @@ public class MapElement
         Random r = new Random();
         this.structure = null;
         this.image = null;
-        this.ownerName = "Dave";
         this.grassType = r.nextInt((4-1)+1)+1;
         this.position = position;
     }
@@ -80,5 +88,12 @@ public class MapElement
     public void setOwnerName(String ownerName)
     {
         this.ownerName = ownerName;
+    }
+
+    @NonNull
+    @Override
+    public String toString()
+    {
+        return "Map element at " + position + " Structure type: " + structure;
     }
 }

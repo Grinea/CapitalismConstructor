@@ -2,39 +2,40 @@ package com.github.grinea.capitalismisland.model;
 
 public class DatabaseSchema
 {
-    public static class SettingsTable
+
+    static class SettingsTable
     {
-        public static final String NAME = "settings";
-        public static class Cols
+        static final String NAME = "settings";
+        static class Cols
         {
-            public static final String WIDTH = "mapWidth";
-            public static final String HEIGHT = "mapHeight";
-            public static final String INIT_CASH = "initialMoney";
+            static final String WIDTH = "mapWidth";
+            static final String HEIGHT = "mapHeight";
+            static final String INIT_CASH = "initialMoney";
         }
     }
 
-    public static class StateTable
+    static class StateTable
     {
-        public static final String NAME = "gameState";
-        public static class Cols
+        static final String NAME = "gameState";
+        static class Cols
         {
-            public static final String TIME = "gameTime";
-            public static final String MONEY = "money";
-            public static final String RES = "nRes";
-            public static final String COM = "nCom";
-            public static final String INCOME = "lastIncome";
+            static final String TIME = "gameTime";
+            static final String MONEY = "money";
+            static final String RES = "nRes";
+            static final String COM = "nCom";
+            static final String INCOME = "lastIncome";
         }
     }
 
-    public static class MapTable
+    static class MapTable
     {
-        public static final String NAME = "mapElements";
-        public static class Cols
+        static final String NAME = "mapElements";
+        static class Cols
         {
-            public static final String POS = "position";
-            public static final String STRUCTURE = "structure";
-            public static final String OWNED = "ownerName";
-            public static final String GRASS = "grassType";
+            static final String POS = "position";
+            static final String STRUCTURE = "structure";
+            static final String OWNED = "ownerName";
+            static final String GRASS = "grassType";
         }
     }
 
