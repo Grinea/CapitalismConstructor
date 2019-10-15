@@ -18,4 +18,9 @@
 
     <string name="demolish">Demolish</string>
     <string name="add_photo">Add Photo</string>
+
+    <string name="road">Road</string>
+    <string name="commercial">Commercial</string>
+    <string name="residential">Residential</string>
+
 </resources>
