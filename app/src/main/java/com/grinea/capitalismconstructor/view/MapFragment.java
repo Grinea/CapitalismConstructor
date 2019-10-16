@@ -250,7 +250,9 @@ public class MapFragment extends Fragment
         demolish.setOnClickListener((z) -> {
             GameData.getInstance().demolish(dataElem.getStructure());
             dataElem.setStructure(null);
+            GameData.getInstance().updateMapElement(dataElem);
             rv.getAdapter().notifyItemChanged(mapPos);
+
             puw.dismiss();
         });
 

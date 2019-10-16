@@ -78,14 +78,6 @@ public class GameData
             while(!mapCur.isAfterLast())
             {
                 MapElement mapElem = mapCur.getElement();
-                if (mapElem.getPos() == 0)
-                {
-                    System.out.println(mapElem.toString());
-                }
-                if (mapElem.getStructure() != null)
-                {
-                    build(mapElem.getStructure());
-                }
 
                 map.setElement(mapElem);
                 mapCur.moveToNext();

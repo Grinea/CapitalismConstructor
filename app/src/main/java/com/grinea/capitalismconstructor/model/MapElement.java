@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Class representing a single map cell, uses -1 to indicate nulls for database
+
 import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import java.util.Random;
 
 public class MapElement
 {
+    //available backgrounds
     private static int[] grasses = {R.drawable.ic_grass1,
                                     R.drawable.ic_grass2,
                                     R.drawable.ic_grass3,
@@ -20,8 +23,10 @@ public class MapElement
     private int grassType;
     private int position;
 
-    public MapElement(int position, int structure, String ownerName, int grassType)
+    //Alternate constructor used when rebuilding from database
+    MapElement(int position, int structure, String ownerName, int grassType)
     {
+        //blank structure
         if (structure != -1)
         {
             this.structure = StructureData.getInstance().getElement(structure);
@@ -35,11 +40,12 @@ public class MapElement
         this.position = position;
     }
 
-    public MapElement(int position)
+    MapElement(int position)
     {
         Random r = new Random();
         this.structure = null;
         this.image = null;
+        //randomly assign background for natural look
         this.grassType = grasses[r.nextInt(grasses.length)];
         this.position = position;
     }
@@ -54,7 +60,7 @@ public class MapElement
         return structure;
     }
 
-    public int getPos()
+    int getPos()
     {
         return position;
     }
@@ -64,8 +70,9 @@ public class MapElement
         this.structure = structure;
     }
 
-    public int getStructureType()
+    int getStructureType()
     {
+        //returns -1 on null for database saving
         if (structure == null)
         {
             return -1;
@@ -96,10 +103,4 @@ public class MapElement
         this.ownerName = ownerName;
     }
 
-    @NonNull
-    @Override
-    public String toString()
-    {
-        return "Map element at " + position + " Structure type: " + structure;
-    }
 }

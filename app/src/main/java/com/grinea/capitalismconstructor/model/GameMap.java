@@ -1,5 +1,10 @@
 package com.grinea.capitalismconstructor.model;
 
+/*
+* Wrapper class for the 2D array to ease use with a recycler view that works
+* on a linear position
+*/
+
 public class GameMap
 {
     MapElement[][] map;
@@ -19,7 +24,7 @@ public class GameMap
 
     public MapElement getElement(int position)
     {
-
+        //out of bounds check
         if (position > (map[0].length * map.length)-1)
         {
             throw new IllegalArgumentException("No such map element.");
@@ -44,6 +49,7 @@ public class GameMap
         return map[0].length;
     }
 
+    //Decides if a cell is clear and adjacent to a road
     public boolean isBuildable(int position)
     {
         boolean buildable = false;
@@ -51,11 +57,13 @@ public class GameMap
         int row = position / map[0].length;
         int col = position % map[0].length;
 
+        //cell is clear
         if (map[row][col].getStructure() != null)
         {
             return false;
         }
 
+        //checks N if N exists
         if (row > 0)
         {
             if (map[row - 1][col].getStructureType() == 0)
@@ -64,6 +72,7 @@ public class GameMap
             }
         }
 
+        //checks S if S exists
         if (row < map.length - 1)
         {
             if (map[row + 1][col].getStructureType() == 0)
@@ -72,6 +81,7 @@ public class GameMap
             }
         }
 
+        //checks W if W exists
         if (col > 0)
         {
             if (map[row][col - 1].getStructureType() == 0)
@@ -80,6 +90,7 @@ public class GameMap
             }
         }
 
+        //checks E if E exists
         if (col < map[0].length - 1)
         {
             if (map[row][col + 1].getStructureType() == 0)

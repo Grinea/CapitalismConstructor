@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Cursor class for retrieving map elements from database
+
 import android.database.Cursor;
 import android.database.CursorWrapper;
 

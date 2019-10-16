@@ -1,17 +1,21 @@
 package com.grinea.capitalismconstructor.model;
 
+/*
+* database wrapper class that contains the SQLite database and provides wrapper
+* methods for inserting and updating the data within in a manner easier for use
+* in the game
+*/
 import android.content.ContentValues;
 import android.content.Context;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class GameDatabase extends SQLiteOpenHelper
 {
-    public static final int VERSION = 1;
-    public static final String DATABASE_NAME = "capitalism.db";
+    private static final int VERSION = 1;
+    private static final String DATABASE_NAME = "capitalism.db";
     private SQLiteDatabase db;
 
 
@@ -50,21 +54,26 @@ public class GameDatabase extends SQLiteOpenHelper
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public void setDB(SQLiteDatabase db)
-    {
-        this.db = db;
-    }
 
-    public void updateMapElement(MapElement mapEl)
+    //Overwrite the owner and structure of a mapelement in the database
+    void updateMapElement(MapElement mapEl)
     {
         ContentValues cv = new ContentValues();
-        cv.put(DatabaseSchema.MapTable.Cols.STRUCTURE, mapEl.getStructure().getID());
+        if (mapEl.getStructure() != null)
+        {
+            cv.put(DatabaseSchema.MapTable.Cols.STRUCTURE, mapEl.getStructure().getID());
+        }
+        else
+        {
+            cv.put(DatabaseSchema.MapTable.Cols.STRUCTURE, -1);
+        }
         cv.put(DatabaseSchema.MapTable.Cols.OWNED, mapEl.getOwnerName());
         String[] pos = {String.valueOf(mapEl.getPos())};
         db.update(DatabaseSchema.MapTable.NAME, cv, "position = ?", pos);
     }
 
-    public void insertMapElement(MapElement mapEl)
+    //Inserting a mapelement for after database has been cleared by reset
+    void insertMapElement(MapElement mapEl)
     {
         ContentValues cv = new ContentValues();
         if (mapEl.getStructure() != null)
@@ -81,7 +90,8 @@ public class GameDatabase extends SQLiteOpenHelper
         db.insert(DatabaseSchema.MapTable.NAME, null, cv);
     }
 
-    public void setSettings(int height, int width, int cash)
+    //Save values of settings
+    void setSettings(int height, int width, int cash)
     {
         db.delete(DatabaseSchema.SettingsTable.NAME, null, null);
         ContentValues cv = new ContentValues();
@@ -91,7 +101,8 @@ public class GameDatabase extends SQLiteOpenHelper
         db.insert(DatabaseSchema.SettingsTable.NAME, null, cv);
     }
 
-    public void setState(int gameTime, int money, int nRes, int nCom, int income)
+    //Save values of state
+    void setState(int gameTime, int money, int nRes, int nCom, int income)
     {
         db.delete(DatabaseSchema.StateTable.NAME, null, null);
         ContentValues cv = new ContentValues();
@@ -103,32 +114,27 @@ public class GameDatabase extends SQLiteOpenHelper
         db.insert(DatabaseSchema.StateTable.NAME, null, cv);
     }
 
-    public void reset()
+    //Clears the state and map for resetting the game
+    void reset()
     {
         db.delete(DatabaseSchema.StateTable.NAME, null, null);
         db.delete(DatabaseSchema.MapTable.NAME, null, null);
     }
 
-    public void updateSettings(Settings sts)
-    {
-        Cursor cur = db.query(DatabaseSchema.SettingsTable.NAME,null,null,null,null,null,null);
-        sts.setMapWidth(cur.getInt(cur.getColumnIndex(DatabaseSchema.SettingsTable.Cols.WIDTH)));
-        sts.setMapHeight(cur.getInt(cur.getColumnIndex(DatabaseSchema.SettingsTable.Cols.HEIGHT)));
-        sts.setInitialMoney(cur.getInt(cur.getColumnIndex(DatabaseSchema.SettingsTable.Cols.INIT_CASH)));
-        cur.close();
-    }
-
-    public SettingsCursor settingsQuery()
+    //Returns a settings cursor for accessing the saved settings
+    SettingsCursor settingsQuery()
     {
         return new SettingsCursor(db.query(DatabaseSchema.SettingsTable.NAME, null, null, null, null, null, null));
     }
 
-    public MapCursor mapQuery()
+    //returns a mapcursor for accessing saved mapelements
+    MapCursor mapQuery()
     {
         return new MapCursor(db.query(DatabaseSchema.MapTable.NAME,null,null,null,null,null,null));
     }
 
-    public StateCursor stateQuery()
+    //returns a statequery for accessing saved gamestate data
+    StateCursor stateQuery()
     {
         return new StateCursor(db.query(DatabaseSchema.StateTable.NAME, null, null, null, null, null, null));
     }

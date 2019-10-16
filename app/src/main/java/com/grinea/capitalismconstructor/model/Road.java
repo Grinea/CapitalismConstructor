@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Class representing roads, defines return values
+
 public class Road extends Structure
 {
     public Road(int imageID, int ID)
@@ -17,5 +19,11 @@ public class Road extends Structure
     public int getCost()
     {
         return GameData.getInstance().getSettings().getRoadCost();
+    }
+
+    @Override
+    public String getDefaultName()
+    {
+        return "Road";
     }
 }

@@ -1,10 +1,12 @@
 package com.grinea.capitalismconstructor.model;
 
+//Abstract class representing a built structure
+
 public abstract class Structure
 {
 
-    int imageID;
-    int ID;
+    private int imageID;
+    private int ID;
 
     public Structure(int imageID, int ID)
     {
@@ -12,12 +14,13 @@ public abstract class Structure
         this.imageID = imageID;
     }
 
-    public int getID()
+    int getID()
     {
         return ID;
     }
 
-    public int getImageID() {
+    public int getImageID()
+    {
         return imageID;
     }
 
@@ -25,22 +28,5 @@ public abstract class Structure
 
     public abstract int getType();
 
-    public String getDefaultName()
-    {
-        String name = "Default";
-        switch (getType())
-        {
-
-            case 0:
-                name = "Road";
-            break;
-            case 1:
-                name = "Residential";
-            break;
-            case 2:
-                name = "Commercial";
-            break;
-        }
-        return name;
-    }
+    public abstract String getDefaultName();
 }

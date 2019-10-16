@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Settings class, contains game variables
+
 public class Settings
 {
     private int mapWidth;
@@ -59,31 +61,31 @@ public class Settings
         this.initialMoney = initialMoney;
     }
 
-    public int getFamilySize()
+    int getFamilySize()
     {
         return familySize;
     }
 
 
-    public int getShopSize()
+    int getShopSize()
     {
         return shopSize;
     }
 
 
-    public int getSalary()
+    int getSalary()
     {
         return salary;
     }
 
 
-    public double getTaxRate()
+    double getTaxRate()
     {
         return taxRate;
     }
 
 
-    public int getServiceCost()
+    int getServiceCost()
     {
         return serviceCost;
     }

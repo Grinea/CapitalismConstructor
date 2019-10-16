@@ -57,7 +57,7 @@ public class GameFragment extends Fragment
         if (mapEl.getStructure() != null)
         {
             Toast toast = Toast.makeText(getContext(), "Space occupied!",
-                                         Toast.LENGTH_LONG);
+                                         Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return false;
@@ -72,12 +72,13 @@ public class GameFragment extends Fragment
                 mapEl.setStructure(structure);
                 gd.build(structure);
                 getView().findViewById(R.id.val_money);
+                gd.updateMapElement(gd.getMap().getElement(position));
                 return true;
             } else // not connect to road
             {
                 Toast toast =
                         Toast.makeText(getContext(), "Not connected to road",
-                                       Toast.LENGTH_LONG);
+                                       Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 return false;
@@ -85,7 +86,7 @@ public class GameFragment extends Fragment
         } else //not enough capitalism
         {
             Toast toast = Toast.makeText(getContext(), "Too poor! Be richer",
-                                         Toast.LENGTH_LONG);
+                                         Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
             return false;

@@ -1,5 +1,9 @@
 package com.grinea.capitalismconstructor.model;
 
+/*
+* Singleton class respresenting all the structures available for building
+*/
+
 import com.grinea.capitalismconstructor.R;
 
 public class StructureData
@@ -58,6 +62,7 @@ public class StructureData
         return residential.length + commercial.length + road.length;
     }
 
+    //Converts position number to structure object based on location in arrays
     public Structure getElement(int position)
     {
         int resLen = residential.length;
@@ -69,6 +74,7 @@ public class StructureData
             throw new IllegalArgumentException("No such structure");
         }
 
+        //position breakdown
         if (position < resLen)
         {
             return residential[position];

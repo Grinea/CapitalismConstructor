@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Class representing commercial buildings, defines return values
+
 public class Commercial extends Structure
 {
     Commercial(int imageID, int ID)
@@ -17,5 +19,11 @@ public class Commercial extends Structure
     public int getCost()
     {
         return GameData.getInstance().getSettings().getCommCost();
+    }
+
+    @Override
+    public String getDefaultName()
+    {
+        return "Commercial";
     }
 }

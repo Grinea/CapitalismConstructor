@@ -1,39 +1,40 @@
 package com.grinea.capitalismconstructor.model;
 
+//Cursor class for pulling gamestate out of database
 
 import com.grinea.capitalismconstructor.model.DatabaseSchema.StateTable.Cols;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-public class StateCursor extends CursorWrapper
+class StateCursor extends CursorWrapper
 {
-    public StateCursor(Cursor cursor)
+    StateCursor(Cursor cursor)
     {
         super(cursor);
     }
 
-    public int getIncome()
+    int getIncome()
     {
         return getInt(getColumnIndex(Cols.INCOME));
     }
 
-    public int getRes()
+    int getRes()
     {
         return getInt(getColumnIndex(Cols.RES));
     }
 
-    public int getCom()
+    int getCom()
     {
         return getInt(getColumnIndex(Cols.COM));
     }
 
-    public int getTime()
+    int getTime()
     {
         return getInt(getColumnIndex(Cols.TIME));
     }
 
-    public int getMoney()
+    int getMoney()
     {
         return getInt(getColumnIndex(Cols.MONEY));
     }

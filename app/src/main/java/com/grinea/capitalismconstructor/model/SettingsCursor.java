@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Cursor class for pulling settings out of database
+
 import com.grinea.capitalismconstructor.model.DatabaseSchema.SettingsTable.Cols;
 import android.database.Cursor;
 import android.database.CursorWrapper;

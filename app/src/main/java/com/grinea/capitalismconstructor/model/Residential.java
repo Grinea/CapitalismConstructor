@@ -1,5 +1,7 @@
 package com.grinea.capitalismconstructor.model;
 
+//Class representing houses, defines return values
+
 public class Residential extends Structure
 {
     public Residential(int imageID, int ID)
@@ -17,6 +19,12 @@ public class Residential extends Structure
     public int getCost()
     {
         return GameData.getInstance().getSettings().getHouseCost();
+    }
+
+    @Override
+    public String getDefaultName()
+    {
+        return "Residential";
     }
 
 }
