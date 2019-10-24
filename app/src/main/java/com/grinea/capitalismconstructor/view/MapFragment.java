@@ -1,12 +1,14 @@
 package com.grinea.capitalismconstructor.view;
 
 /*
-* Class that represents the 2D map of the game area.
-*/
+ * Class that represents the 2D map of the game area.
+ */
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,25 +23,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grinea.capitalismconstructor.R;
+import com.grinea.capitalismconstructor.controller.MainActivity;
 import com.grinea.capitalismconstructor.model.GameData;
 import com.grinea.capitalismconstructor.model.GameMap;
 import com.grinea.capitalismconstructor.model.MapElement;
 import com.grinea.capitalismconstructor.model.Structure;
 
+import java.util.concurrent.RecursiveAction;
+
 
 public class MapFragment extends Fragment
 {
-    private static final int PHOTO_REQUEST_CODE = 1;
+    public static final int PHOTO_REQUEST_CODE = 1;
+    public final int PERMISSION_CODE = 2;
     private MapElement selElem;
+    private ImageView puwPic;
 
     private RecyclerView rv;
 
@@ -134,7 +144,8 @@ public class MapFragment extends Fragment
 
                 //collect references
                 FragmentManager fm = getFragmentManager();
-                SelectorFragment sf = (SelectorFragment) fm.findFragmentById(R.id.selector);
+                SelectorFragment sf =
+                        (SelectorFragment) fm.findFragmentById(R.id.selector);
                 Structure selStruct = sf.getSelStruct();
 
                 //if nothing is selected aka inspectmode
@@ -188,6 +199,11 @@ public class MapFragment extends Fragment
 
     }
 
+    public RecyclerView getRv()
+    {
+        return rv;
+    }
+
     public void inspectPopUp(int mapPos)
     {
         MapElement dataElem =
@@ -196,15 +212,23 @@ public class MapFragment extends Fragment
         View window = getLayoutInflater().inflate(R.layout.popup_inspect, null);
 
         //collect references
-        ImageView picture = window.findViewById(R.id.picture);
+        puwPic = window.findViewById(R.id.picture);
         EditText ownerName = window.findViewById(R.id.owner_name);
         TextView position = window.findViewById(R.id.position);
         TextView type = window.findViewById(R.id.structure_type);
 
         Button demolish = window.findViewById(R.id.demolish);
         Button addPhoto = window.findViewById(R.id.add_photo);
+        Button close = window.findViewById(R.id.exit);
 
-        picture.setImageResource(structure.getImageID());
+        if (dataElem.getImage() == null)
+        {
+            puwPic.setImageResource(structure.getImageID());
+        } else
+        {
+            puwPic.setImageBitmap(dataElem.getImage());
+        }
+
         ownerName.setText(dataElem.getOwnerName());
 
 
@@ -258,20 +282,44 @@ public class MapFragment extends Fragment
 
         //OCL for adding thumbnail photos
         addPhoto.setOnClickListener((z) -> {
-            puw.dismiss();
-            Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(photoIntent, PHOTO_REQUEST_CODE);
+            GameData.getInstance().setSelEl(selElem);
+
+            //Check for and request permissoins if required
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                                                  Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(getActivity(),
+                                                  new String[]{Manifest.permission.CAMERA},
+                                                  PERMISSION_CODE);
+            } else //start camera app
+            {
+                Intent photoIntent =
+                        new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(photoIntent,
+                                       MapFragment.PHOTO_REQUEST_CODE);
+            }
         });
+
+        //OCL for closing
+        close.setOnClickListener((z) -> {
+            puw.dismiss();
+            rv.getAdapter().notifyDataSetChanged();
+        });
+
     }
 
-    //result for photo OCL
+    //Handling activity returns
     @Override
     public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultIntent)
+                                 @Nullable Intent data)
     {
-        if (resultCode == Activity.RESULT_OK && requestCode == PHOTO_REQUEST_CODE)
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK)
         {
-            selElem.setImage((Bitmap) resultIntent.getExtras().get("data"));
+            GameData.getInstance().getSelEl()
+                    .setImage((Bitmap) data.getExtras().get("data"));
+            puwPic.setImageBitmap(GameData.getInstance().getSelEl().getImage());
         }
     }
 

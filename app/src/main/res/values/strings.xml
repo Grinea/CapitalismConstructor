@@ -23,4 +23,6 @@
     <string name="commercial">Commercial</string>
     <string name="residential">Residential</string>
 
+    <string name="close">Close</string>
+
 </resources>

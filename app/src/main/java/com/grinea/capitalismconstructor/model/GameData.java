@@ -18,6 +18,7 @@ public class GameData
     private int income;
     private List<StatsObs> obs;
     private GameDatabase db;
+    private MapElement selEl;
 
     private GameData()
     {
@@ -230,5 +231,15 @@ public class GameData
     public void updateMapElement(MapElement elem)
     {
         db.updateMapElement(elem);
+    }
+
+    public MapElement getSelEl()
+    {
+        return selEl;
+    }
+
+    public void setSelEl(MapElement selEl)
+    {
+        this.selEl = selEl;
     }
 }
